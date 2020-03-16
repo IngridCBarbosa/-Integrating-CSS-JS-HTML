@@ -117,6 +117,29 @@ function Progresso() {
     
 }
 
+function estaoSobrePostos(elementoA,elementoB) {
+    const a = elementoA.getBoundClientRect()
+    const b = elementoB.getBoundClientRect()
+
+    const horizontal = a.left + a.width >= b.left && b.left + b.width >= a.left
+    const vertical = a.top + a.hieght >= b.top && b.top + b.hieght >= a.top
+    return horizontal && vertical
+}
+
+function colidiu(passaro, barreiras){
+    let colidiu = false
+    barreiras.pares.forEach(parDeBarreiras => {
+        if(!colidiu){
+            const superior = parDeBarreiras.superior.elemento
+            const inferior = parDeBarreiras.inferior.elemento
+
+            colidiu = estaoSobrePostos(passaro.elemento,superior)
+                || estaoSobrePostos(passaro.elemeto,inferior)
+        }
+    })
+    return colidiu
+}
+
 function FlappyBird () {
     let pontos = 0
 
@@ -137,7 +160,11 @@ function FlappyBird () {
         //LOOP DO JOGO
         const temporizado = setInterval(() =>{
             barreiras.animar()
-            passaro.animar()
+            passaroa.animar()
+
+            if(colidiu(passaroa,barreiras)){
+                clearInterval(temporizado )
+            }
         },20)
     }
 }
